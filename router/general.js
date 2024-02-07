@@ -27,7 +27,7 @@ public_users.post("/register", (req,res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  if(!username && !password){
+  if(username && password){
 
     if(!userExist(username)){
 

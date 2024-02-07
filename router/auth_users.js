@@ -49,7 +49,7 @@ regd_users.post("/login", (req,res) => {
   //Write your code here
   const username = req.body.username;
   const password = req.body.password;
-
+  
   if(!username || !password){
 
     res.send("Error in login");
@@ -59,7 +59,7 @@ regd_users.post("/login", (req,res) => {
 
     let accessToken = jwt.sign({
         data : password
-    },'access', {expiresIn : 60 * 10})
+    },'access', {expiresIn : 60 * 60})
 
     req.session.authorization = {
 
@@ -77,7 +77,24 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
+  console.log("Enter")
+  const review = req.query.review;
+  const isbn = req.params.isbn;
+  const user = req.session.username
+  for(let key in books){
+    let book = books[key];
+    if(key === isbn){
+        book.reviews = {user:user,review:review}   
+    }
+  }
+  res.send("Review Updated")
 });
+
+regd_users.delete("/auth/review/:isbn",(req,res) => {
+    const isbn = req.params.isbn
+    books[isbn] = {}
+    res.send("Review Deleted")
+})
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
